@@ -60,6 +60,15 @@
             align-items: center;
         }
 
+        /* Smooth page transitions */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            transition: opacity 0.3s ease-in-out;
+        }
+        
         /* Navbar Link styles */
         .navbar .nav-link {
             font-weight: 500;
@@ -76,35 +85,8 @@
 
         /* Active Page Highlight */
         .navbar .nav-link.active {
-            color: #e84393;
-            font-weight: 600;
-        }
-
-        .navbar .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: #e84393;
-            border-radius: 50%;
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-
-            0%,
-            100% {
-                transform: translateX(-50%) scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: translateX(-50%) scale(1.5);
-                opacity: 0.7;
-            }
+            color: #e84393 !important;
+            font-weight: 600 !important;
         }
 
         /* Book Appointment Button */
@@ -140,11 +122,6 @@
                 padding: 0.5rem 1rem !important;
             }
 
-            .navbar .nav-link.active::after {
-                bottom: 0;
-                left: 10px;
-                transform: none;
-            }
 
             .btn-book.d-lg-none {
                 margin-top: 0.5rem;
@@ -231,7 +208,7 @@
         <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
 
             <div class="container">
-                <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
                     <img src="image/logo.png" alt="Medikanta Logo" width="80" class="me-2">
                     <span class="text-primary">MEDIKANTA</span>
                 </a>
@@ -243,10 +220,10 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto text-center">
-                        <li class="nav-item" style="font-weight: 800 !important;">
-                            <a class="nav-link" href="index.html" id="home-link">Home</a>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="index.html" id="home-link" aria-current="page">Home</a>
                         </li>
-                        <li class="nav-item" style="font-weight: 800 !important;">
+                        <li class="nav-item">
                             <a class="nav-link" href="about.html" id="about-link">About</a>
                         </li>
                         <li class="nav-item">
@@ -260,9 +237,9 @@
                         </li>
                     </ul>
                     <!-- Book Appointment Buttons -->
-                    <a href="contact.html" class="btn btn-book d-lg-none mt-2">Book Appointment</a>
+                    <a href="#appointment-section" class="btn btn-book d-lg-none mt-2">Book Appointment</a>
                 </div>
-                <a href="contact.html" class="btn btn-book d-none d-lg-block">Book Appointment</a>
+                <a href="#appointment-section" class="btn btn-book d-none d-lg-block">Book Appointment</a>
             </div>
         </nav>
     </header>
@@ -349,13 +326,43 @@
             // Set active page on load
             setActivePage();
 
-            // Also set active page when navigating (for single page apps or dynamic content)
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function () {
-                    // Remove active class from all links
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    // Add active class to clicked link
-                    this.classList.add('active');
+            // Smooth navigation enhancement
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add smooth transition on page load
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.style.opacity = '1';
+                }, 50);
+
+                // Handle navigation links for smooth transitions
+                document.querySelectorAll('.nav-link, .navbar-brand, .btn-book, .card-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        
+                        // Handle anchor links (scroll to section)
+                        if (href && href.startsWith('#')) {
+                            e.preventDefault();
+                            const targetSection = document.querySelector(href);
+                            if (targetSection) {
+                                targetSection.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
+                            }
+                        }
+                        // Handle internal navigation (other pages)
+                        else if (href && href !== '#' && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                            e.preventDefault();
+                            
+                            // Add fade out effect
+                            document.body.style.opacity = '0.7';
+                            
+                            // Navigate after short delay
+                            setTimeout(() => {
+                                window.location.href = href;
+                            }, 150);
+                        }
+                    });
                 });
             });
 
@@ -1894,7 +1901,7 @@
                             <span>ECG Analysis</span>
                             <span>Cardiac Care</span>
                         </div>
-                        <a href="contact.html" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
+                        <a href="#appointment-section" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -1924,7 +1931,7 @@
                             <span>Joint Replacement</span>
                             <span>Sports Injury</span>
                         </div>
-                        <a href="contact.html" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
+                        <a href="#appointment-section" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -1953,7 +1960,7 @@
                             <span>Colonoscopy</span>
                             <span>Liver Care</span>
                         </div>
-                        <a href="contact.html" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
+                        <a href="#appointment-section" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -1982,7 +1989,7 @@
                             <span>Health Checkup</span>
                             <span>Preventive Care</span>
                         </div>
-                        <a href="contact.html" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
+                        <a href="#appointment-section" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -2011,7 +2018,7 @@
                             <span>Laparoscopic</span>
                             <span>Trauma Surgery</span>
                         </div>
-                        <a href="contact.html" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
+                        <a href="#appointment-section" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -2040,7 +2047,7 @@
                             <span>Nerve Studies</span>
                             <span>Stroke Care</span>
                         </div>
-                        <a href="contact.html" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
+                        <a href="#appointment-section" class="card-link">Book Appointment <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -4238,7 +4245,7 @@
 </style>
 
 <!-- Appointment Section -->
-<section class="appointment-section py-4">
+<section id="appointment-section" class="appointment-section py-4">
     <!-- Background Elements -->
     <div class="bg-elements">
         <div class="floating-doc doc-1">
@@ -4939,9 +4946,38 @@
             timestamp: new Date().toLocaleString()
         };
 
-        // Show success modal
-        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-        successModal.show();
+        // Create WhatsApp message
+        const whatsappMessage = `Hello! I would like to book an appointment with Medikanta.
+
+*Patient Details:*
+• Name: ${formData.fullName}
+• Phone: ${formData.phoneNumber}
+• Email: ${formData.email}
+
+*Appointment Details:*
+• Service: ${formData.service}
+• Preferred Date: ${formData.appointmentDate}
+• Preferred Time: ${formData.appointmentTime}
+
+*Additional Message:*
+${formData.message}
+
+Please confirm my appointment. Thank you!`;
+
+        // Encode message for URL
+        const encodedMessage = encodeURIComponent(whatsappMessage);
+        
+        // WhatsApp number (India format)
+        const whatsappNumber = '7322943448';
+        
+        // Create WhatsApp URL
+        const whatsappURL = `https://wa.me/91${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Open WhatsApp
+        window.open(whatsappURL, '_blank');
+
+        // Show success message
+        alert('Thank you! WhatsApp will open with your appointment details. Please send the message to confirm your appointment.');
 
         // Reset form
         document.getElementById('appointmentForm').reset();

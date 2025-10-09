@@ -60,6 +60,15 @@
             align-items: center;
         }
 
+        /* Smooth page transitions */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            transition: opacity 0.3s ease-in-out;
+        }
+        
         /* Navbar Link styles */
         .navbar .nav-link {
             font-weight: 500;
@@ -76,35 +85,8 @@
 
         /* Active Page Highlight */
         .navbar .nav-link.active {
-            color: #e84393;
-            font-weight: 600;
-        }
-
-        .navbar .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            background: #e84393;
-            border-radius: 50%;
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-
-            0%,
-            100% {
-                transform: translateX(-50%) scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: translateX(-50%) scale(1.5);
-                opacity: 0.7;
-            }
+            color: #e84393 !important;
+            font-weight: 600 !important;
         }
 
         /* Book Appointment Button */
@@ -140,11 +122,6 @@
                 padding: 0.5rem 1rem !important;
             }
 
-            .navbar .nav-link.active::after {
-                bottom: 0;
-                left: 10px;
-                transform: none;
-            }
 
             .btn-book.d-lg-none {
                 margin-top: 0.5rem;
@@ -229,7 +206,7 @@
         <!-- Navbar -->
        <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
                     <img src="image/logo.png" alt="Medikanta Logo" width="80" class="me-2">
                     <span class="text-primary">MEDIKANTA</span>
                 </a>
@@ -258,9 +235,9 @@
                         </li>
                     </ul>
                     <!-- Book Appointment Buttons -->
-                    <a href="contact.html" class="btn btn-book d-lg-none mt-2">Book Appointment</a>
+                    <a href="index.html#appointment-section" class="btn btn-book d-lg-none mt-2">Book Appointment</a>
                 </div>
-                <a href="contact.html" class="btn btn-book d-none d-lg-block">Book Appointment</a>
+                <a href="index.html#appointment-section" class="btn btn-book d-none d-lg-block">Book Appointment</a>
             </div>
         </nav>
     </header>
@@ -346,13 +323,31 @@
             // Set active page on load
             setActivePage();
 
-            // Also set active page when navigating (for single page apps or dynamic content)
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function () {
-                    // Remove active class from all links
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    // Add active class to clicked link
-                    this.classList.add('active');
+            // Smooth navigation enhancement
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add smooth transition on page load
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.style.opacity = '1';
+                }, 50);
+
+                // Handle navigation links for smooth transitions
+                document.querySelectorAll('.nav-link, .navbar-brand').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        // Only handle internal navigation
+                        const href = this.getAttribute('href');
+                        if (href && href !== '#' && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                            e.preventDefault();
+                            
+                            // Add fade out effect
+                            document.body.style.opacity = '0.7';
+                            
+                            // Navigate after short delay
+                            setTimeout(() => {
+                                window.location.href = href;
+                            }, 150);
+                        }
+                    });
                 });
             });
 
