@@ -280,8 +280,10 @@
 
             // Active Page Highlight Functionality
             function setActivePage() {
-                // Get current page URL
-                const currentPage = window.location.pathname.split('/').pop();
+                // Get current page URL with multiple detection methods
+                const pathname = window.location.pathname;
+                const currentPage = pathname.split('/').pop();
+                const fullPath = pathname.toLowerCase();
 
                 // Remove active class from all links
                 document.querySelectorAll('.nav-link').forEach(link => {
@@ -291,33 +293,37 @@
                 // Add active class to current page link
                 let activeLink = null;
 
-                switch (currentPage) {
-                    case 'index.html':
-                    case '':
-                        activeLink = document.getElementById('home-link');
-                        break;
-                    case 'about.html':
-                        activeLink = document.getElementById('about-link');
-                        break;
-                    case 'service.html':
-                        activeLink = document.getElementById('service-link');
-                        break;
-                    case 'gallery.html':
-                        activeLink = document.getElementById('gallery-link');
-                        break;
-                    case 'contact us.html':
-                        activeLink = document.getElementById('contact-link');
-                        break;
-                    default:
-                        // If no match, check if it's home page
-                        if (currentPage === '' || currentPage === 'index.html' || currentPage.includes('index')) {
-                            activeLink = document.getElementById('home-link');
+                // More robust page detection for both local and production environments
+                if (fullPath.includes('gallery') || currentPage === 'gallery.html' || currentPage === 'gallery') {
+                    activeLink = document.getElementById('gallery-link');
+                } else if (fullPath.includes('about') || currentPage === 'about.html' || currentPage === 'about') {
+                    activeLink = document.getElementById('about-link');
+                } else if (fullPath.includes('service') || currentPage === 'service.html' || currentPage === 'service') {
+                    activeLink = document.getElementById('service-link');
+                } else if (fullPath.includes('contact') || currentPage === 'contact.html' || currentPage === 'contact') {
+                    activeLink = document.getElementById('contact-link');
+                } else if (fullPath.includes('index') || currentPage === 'index.html' || currentPage === 'index' || currentPage === '' || pathname === '/' || pathname.endsWith('/')) {
+                    activeLink = document.getElementById('home-link');
+                }
+
+                // Fallback: check by href attribute matching
+                if (!activeLink) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href && (pathname.includes(href.replace('.html', '')) || (href === 'index.html' && (pathname === '/' || pathname.endsWith('/'))))) {
+                            activeLink = link;
                         }
+                    });
                 }
 
                 if (activeLink) {
                     activeLink.classList.add('active');
                 }
+
+                // Debug logging for troubleshooting (remove in production)
+                console.log('Current pathname:', pathname);
+                console.log('Current page:', currentPage);
+                console.log('Active link:', activeLink ? activeLink.textContent : 'none');
             }
 
             // Set active page on load
