@@ -227,7 +227,7 @@
         </div>
 
         <!-- Navbar -->
-       <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
                     <img src="image/logo.png" alt="Medikanta Logo" width="80" class="me-2">
@@ -532,32 +532,10 @@
                         <label for="message">Your Message</label>
                     </div>
 
-                    <button type="button" onclick="sendEnq()" class="submit-btn">
-                        
+                    <button type="submit" class="submit-btn">
                         <i class="fas fa-paper-plane"></i> Send Message
                     </button>
                 </form>
-                <script>
-                    function sendEnq()
-                    {
-                        let name = document.getElementById("name").value;
-      let mobile = document.getElementById("phone").value;
-      let email = document.getElementById("email").value;
-      let Subject = document.getElementById("subject").value;
-       let message = document.getElementById("message").value;
-      let whatsappNumber = "919153694942"; // Replace with your WhatsApp number
-
-      let url = "https://wa.me/" + whatsappNumber + 
-                "?text=" 
-                + "Name: " + encodeURIComponent(name) + "%0A"
-                + "Mobile: " + encodeURIComponent(mobile) + "%0A"
-                + "Email: " + encodeURIComponent(email) + "%0A"
-                + "Subject:" + encodeURIComponent(Subject) + "%0A"
-                + "Message: " + encodeURIComponent(message);
-                        console.log(url);
-      window.open(url, "_blank");
-                    }
-</script>
 
                 <div class="contact-info">
                     <h3>Contact Info</h3>
@@ -1033,30 +1011,34 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Form submission animation
             const form = document.querySelector('.touch-form');
-            const submitBtn = document.querySelector('.submit-btn');
 
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
 
-                // Add loading animation
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                submitBtn.disabled = true;
+                // Form values
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const subject = document.getElementById('subject').value.trim();
+                const message = document.getElementById('message').value.trim();
 
-                // Simulate form submission
-                setTimeout(() => {
-                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-                    submitBtn.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
+                // WhatsApp number (your number)
+                const whatsappNumber = "7322943448";
 
-                    // Reset form after 2 seconds
-                    setTimeout(() => {
-                        form.reset();
-                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-                        submitBtn.style.background = 'linear-gradient(135deg, #ffd700, #ffb700)';
-                        submitBtn.disabled = false;
-                    }, 2000);
-                }, 1500);
+                // Message format
+                const whatsappMessage = `Hello, I have a new inquiry:%0A
+Name: ${name}%0A
+Email: ${email}%0A
+Phone: ${phone}%0A
+Subject: ${subject}%0A
+Message: ${message}`;
+
+                // WhatsApp URL
+                const whatsappURL = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+                // Redirect to WhatsApp
+                window.open(whatsappURL, "_blank");
             });
         });
     </script>
@@ -1862,6 +1844,6 @@
             });
         }
     </script>
-</body>
+    </body>
 
 </html>
